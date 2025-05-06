@@ -82,6 +82,10 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.num_schedule = PowerMeanNoise(**noise_schedule_params)
         elif self.scheduler == 'power_mean_per_column':
             self.num_schedule = PowerMeanNoise_PerColumn(num_numerical = num_numerical_features, **noise_schedule_params)
+        # Our tree_layered noise scheduler
+        elif self.scheduler == 'tree_layered':
+            self.num_schedule = TreeLayeredNoise(**noise_schedule_params)
+            self.cat_schedule = TreeLayeredNoise(**noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.scheduler}-- is not implemented for contiuous data at CTIME ")
         

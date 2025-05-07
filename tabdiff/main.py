@@ -45,13 +45,6 @@ def main(args):
     cat_depths = info.get("cat_depths", None)
     num_tree_layers = info.get("num_tree_layers", None)
 
-    if num_depths is not None:
-        raw_config["diffusion_params"]["num_depths"] = num_depths
-    if cat_depths is not None:
-        raw_config["diffusion_params"]["cat_depths"] = cat_depths
-    if num_tree_layers is not None:
-        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
-
     ## Set up flags
     is_dcr = 'dcr' in dataname
 
@@ -228,6 +221,15 @@ def main(args):
     if not args.y_only and not args.non_learnable_schedule:
         raw_config['diffusion_params']['scheduler'] = 'power_mean_per_column'
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'
+
+    # TODO check that this is working:
+    if num_depths is not None:
+        raw_config["diffusion_params"]["num_depths"] = num_depths
+    if cat_depths is not None:
+        raw_config["diffusion_params"]["cat_depths"] = cat_depths
+    if num_tree_layers is not None:
+        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
+
     diffusion = UnifiedCtimeDiffusion(
         num_classes=categories,
         num_numerical_features=d_numerical,

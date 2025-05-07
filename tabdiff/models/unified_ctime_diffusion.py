@@ -31,9 +31,9 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             noise_schedule_params={},
             sampler_params={},
             device=torch.device('cpu'),
-            num_depths: Optional[List[int]]      = None,
-            cat_depths: Optional[List[int]]      = None,
-            num_tree_layers: Optional[int]       = None,
+            num_depths:       = None,
+            cat_depths:       = None,
+            num_tree_layers:        = None,
             **kwargs
         ):
 

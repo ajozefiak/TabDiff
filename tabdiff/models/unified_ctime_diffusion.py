@@ -31,9 +31,9 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             noise_schedule_params={},
             sampler_params={},
             device=torch.device('cpu'),
-            num_depths:       = None,
-            cat_depths:       = None,
-            num_tree_layers:        = None,
+            num_depths       = None,
+            cat_depths       = None,
+            num_tree_layers        = None,
             **kwargs
         ):
 
@@ -43,6 +43,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         self.num_depths     = num_depths
         self.cat_depths     = cat_depths
         self.num_tree_layers = num_tree_layers
+        print(f"num_depths: {num_depths}")
 
         self.num_numerical_features = num_numerical_features
         self.num_classes = num_classes # it as a vector [K1, K2, ..., Km]

@@ -40,6 +40,18 @@ def main(args):
     with open(info_path, 'r') as f:
         info = json.load(f)
     
+    # TODO: Double check if this is working correctly
+    num_depths = info.get("num_depths", None)
+    cat_depths = info.get("cat_depths", None)
+    num_tree_layers = info.get("num_tree_layers", None)
+
+    if num_depths is not None:
+        raw_config["diffusion_params"]["num_depths"] = num_depths
+    if cat_depths is not None:
+        raw_config["diffusion_params"]["cat_depths"] = cat_depths
+    if num_tree_layers is not None:
+        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
+
     ## Set up flags
     is_dcr = 'dcr' in dataname
 

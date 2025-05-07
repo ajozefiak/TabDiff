@@ -209,6 +209,7 @@ def main(args):
         state_dicts = torch.load(y_only_model_path, map_location=device)
         y_only_model.load_state_dict(state_dicts['denoise_fn'])
 
+    # TODO: Perhaps we modify this for our new scheduler... codebase is not the most organized...
     if not args.y_only and not args.non_learnable_schedule:
         raw_config['diffusion_params']['scheduler'] = 'power_mean_per_column'
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'

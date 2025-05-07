@@ -83,6 +83,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         elif self.scheduler == 'power_mean_per_column':
             self.num_schedule = PowerMeanNoise_PerColumn(num_numerical = num_numerical_features, **noise_schedule_params)
         # Our tree_layered noise scheduler
+        # TODO
         elif self.scheduler == 'tree_layered':
             self.num_schedule = TreeLayeredNoise(**noise_schedule_params)
             self.cat_schedule = TreeLayeredNoise(**noise_schedule_params)

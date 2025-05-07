@@ -131,7 +131,10 @@ def main(args):
         num_workers = 4,
     )
     d_numerical, categories = train_data.d_numerical, train_data.categories
-    
+    print(f"Number of numerical {d_numerical}")
+    print(f"Number of categorical {categories}")
+
+
     val_data = TabDiffDataset(dataname, data_dir, info, y_only=args.y_only, isTrain=False, dequant_dist=raw_config['data']['dequant_dist'], int_dequant_factor=raw_config['data']['int_dequant_factor'])
 
     ## Load Metrics

@@ -36,6 +36,11 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
 
         super(UnifiedCtimeDiffusion, self).__init__()
 
+        # TODO: check that this is workign correct:
+        self.num_depths     = num_depths
+        self.cat_depths     = cat_depths
+        self.num_tree_layers = num_tree_layers
+
         self.num_numerical_features = num_numerical_features
         self.num_classes = num_classes # it as a vector [K1, K2, ..., Km]
         self.num_classes_expanded = torch.from_numpy(
@@ -96,6 +101,8 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.cat_schedule = LogLinearNoise_PerColumn(num_categories = len(num_classes), **noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.cat_scheduler}-- is not implemented for discrete data at CTIME ")
+
+        
 
     def mixed_loss(self, x):
         b = x.shape[0]

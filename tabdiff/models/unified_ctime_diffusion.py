@@ -93,7 +93,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.num_schedule = PowerMeanNoise_PerColumn(num_numerical = num_numerical_features, **noise_schedule_params)
         # Our tree_layered noise scheduler
         # TODO
-        elif self.scheduler == 'tree_layered':
+        elif self.scheduler == 'tree_num':
             self.num_schedule = TreeLayeredNoiseNum(**noise_schedule_params)
             self.cat_schedule = TreeLayeredNoiseCat(**noise_schedule_params)
         else:
@@ -103,6 +103,9 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.cat_schedule = LogLinearNoise(**noise_schedule_params)
         elif self.cat_scheduler == 'log_linear_per_column':
             self.cat_schedule = LogLinearNoise_PerColumn(num_categories = len(num_classes), **noise_schedule_params)
+        # TODO
+        elif self.scheduler == 'tree_cat':
+            self.cat_schedule = TreeLayeredNoiseCat(**noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.cat_scheduler}-- is not implemented for discrete data at CTIME ")
 

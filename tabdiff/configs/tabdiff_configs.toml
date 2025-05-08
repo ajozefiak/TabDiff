@@ -18,7 +18,7 @@ cat_scheduler='log_linear'        # 'log_linear', 'log_linear_unified', 'log_lin
 noise_dist='uniform_t'       #'uniform_t' or 'log_norm'
 
 [diffusion_params.sampler_params]
-stochastic_sampler = false   # default: true
+stochastic_sampler = true
 second_order_correction = true
 
 [diffusion_params.edm_params]

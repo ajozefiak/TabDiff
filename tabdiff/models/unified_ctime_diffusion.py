@@ -94,6 +94,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         # Our tree_layered noise scheduler
         # TODO
         elif self.scheduler == 'tree_num':
+            print(**noise_schedule_params)
             self.num_schedule = TreeLayeredNoiseNum(**noise_schedule_params)
             self.cat_schedule = TreeLayeredNoiseCat(**noise_schedule_params)
         else:

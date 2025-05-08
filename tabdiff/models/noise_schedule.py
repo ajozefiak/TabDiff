@@ -348,7 +348,7 @@ class TreeLayeredNoiseCat(nn.Module):
 
     mask_curr = (self.cat_depths == d_t)
     mask_prev = (self.cat_depths < d_t)
-    msak_next = (self.cat_depths > d_t)
+    mask_next = (self.cat_depths > d_t)
 
     alpha = 1 - self.eps_min - self.eps_max
 

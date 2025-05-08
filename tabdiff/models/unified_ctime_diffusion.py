@@ -40,8 +40,8 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         super(UnifiedCtimeDiffusion, self).__init__()
 
         # TODO: check that this is workign correct:
-        self.num_depths     = torch.tensor(num_depths)
-        self.cat_depths     = torch.tensor(cat_depths)
+        self.num_depths     = num_depths
+        self.cat_depths     = cat_depths
         self.num_tree_layers = num_tree_layers
         print(f"num_depths: {num_depths}")
 

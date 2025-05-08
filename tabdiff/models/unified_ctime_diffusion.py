@@ -94,8 +94,8 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         # Our tree_layered noise scheduler
         # TODO
         elif self.scheduler == 'tree_layered':
-            self.num_schedule = TreeLayeredNoise(**noise_schedule_params)
-            self.cat_schedule = TreeLayeredNoise(**noise_schedule_params)
+            self.num_schedule = TreeLayeredNoiseNum(**noise_schedule_params)
+            self.cat_schedule = TreeLayeredNoiseCat(**noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.scheduler}-- is not implemented for contiuous data at CTIME ")
         

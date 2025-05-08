@@ -167,7 +167,10 @@ class TreeLayeredNoiseNum(nn.Module):
     self.rho_offset = rho_offset
     self.rho_raw = nn.Parameter(torch.tensor([rho_init] * self.num_numerical, dtype=torch.float32))
 
-    self.num_depths = num_depths
+    # Register the depth‐map as a buffer so it moves with .to(device)
+    # and lives on the same device as the rest of your model.
+    depth_tensor = torch.tensor(num_depths, dtype=torch.long)
+    self.register_buffer('num_depths', depth_tensor)
     self.num_tree_layers = num_tree_layers
 
   def rho(self):
@@ -299,7 +302,8 @@ class TreeLayeredNoiseCat(nn.Module):
     self.k_offset = k_offset
     self.k_raw = nn.Parameter(torch.tensor([k_init] * self.num_categories, dtype=torch.float32))
 
-    self.cat_depths = cat_depths
+    depth_tensor = torch.tensor(cat_depths, dtype=torch.long)
+    self.register_buffer('cat_depths', depth_tensor)
     self.num_tree_layers = num_tree_layers
 
   def k(self):

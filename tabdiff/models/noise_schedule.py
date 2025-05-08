@@ -353,9 +353,9 @@ class TreeLayeredNoiseCat(nn.Module):
     alpha = 1 - self.eps_min - self.eps_max
 
     # 1) constant at eps_max-1  for past layers
-    noise_prev = -torch.log1p(self.eps_max-1).expand(batch_size, -1)
+    noise_prev = -torch.log1p((self.eps_max-1).expand(batch_size, -1))
     # 2) constant at eps_min  for future layers
-    noise_next = -torch.log1p(-self.eps_min).expand(batch_size, -1)
+    noise_next = -torch.log1p((-self.eps_min).expand(batch_size, -1))
     # 3) the log‑linear schedule only for the active layer
     noise_curr = -torch.log1p(- (alpha * t_.pow(k) + self.eps_min))  # [batch,num_cat]
 

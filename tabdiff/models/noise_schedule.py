@@ -156,6 +156,7 @@ class LogLinearNoise_PerColumn(nn.Module):
 
     return total_noise
 
+# TODO: Should we add sigma_min or 0 noise for layes above d_t?
 class TreeLayeredNoiseNum(nn.Module):
 
   def __init__(self, num_numerical, num_depths, num_tree_layers, sigma_min=0.002, sigma_max=80, rho_init=1, rho_offset=2, **kwargs):
@@ -221,6 +222,71 @@ class TreeLayeredNoiseNum(nn.Module):
 
   #   return t
 
+  # NOTE: This is my naive implementation copying TreeLayerNoiseNum,
+  # see below for a proper implementation
+  # class TreeLayeredNoiseCat(nn.Module):
+
+  #   def __init__(self, num_categories, cat_depths, num_tree_layers, eps_max=1e-3, eps_min=1e-5, k_init=-6, k_offset=1, **kwargs):
+
+  #     super().__init__()
+  #     self.eps_max = eps_max
+  #     self.eps_min = eps_min
+  #     # Use softplus to ensure k is positive
+  #     self.num_categories = num_categories
+  #     self.k_offset = k_offset
+  #     self.k_raw = nn.Parameter(torch.tensor([k_init] * self.num_categories, dtype=torch.float32))
+
+  #     self.cat_depths = cat_depths
+  #     self.num_tree_layers = num_tree_layers
+
+  #   def k(self):
+  #     return torch.nn.functional.softplus(self.k_raw) + self.k_offset
+
+  #   def rate_noise(self, t, noise_fn=None):
+  #     """
+  #     Compute rate noise for all categories with broadcasting.
+  #     t: [batch_size]
+  #     Returns: [batch_size, num_categories]
+  #     """
+  #     k = self.k()  # Shape: [num_categories]
+
+  #     # d_t: the layer that we diffusing
+  #     d_t = (t * self.num_tree_layers).int()
+
+  #     # t_ is the shifted and normalized noise t for the layer d_t
+  #     t_ = t * self.num_tree_layers - d_t
+
+  #     eps_max_  = self.eps_max * (self.num_depths < d_t) + self.epc_min * (self.num_depths > d_t) + self.eps_max * (self.num_depths == d_t)
+  #     eps_min_  = self.eps_max * (self.num_depths < d_t) + self.epc_min * (self.num_depths > d_t) + self.eps_min * (self.num_depths == d_t)
+
+  #     numerator = (1 - eps_max_ - eps_min_) * k * t_.pow(k - 1)
+  #     denominator = 1 - ((1 - eps_max_ - eps_min_) * t_.pow(k) + eps_min_)
+  #     rate = numerator / denominator  # Shape: [batch_size, num_categories]
+
+  #     # NOTE: mask since noise is unchanged with respect to t outside d_t
+  #     # not sure if this is the right approach, need to read up on theory
+  #     derivative_mask = torch.where(self.num_depths == d_t, 1.0, 0.0)
+  #     rate = derivative_mask * rate
+
+  #     return rate
+
+  #   def total_noise(self, t, noise_fn=None):
+  #     k = self.k()  # Shape: [num_categories]
+
+  #     # d_t: the layer that we diffusing
+  #     d_t = (t * self.num_tree_layers).int()
+
+  #     # t_ is the shifted and normalized noise t for the layer d_t
+  #     t_ = t * self.num_tree_layers - d_t
+
+  #     sigma_max_pow_ = sigma_max_pow * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths > d_t) + sigma_max_pow * (self.num_depths == d_t)
+  #     eps_max_  = self.eps_max * (self.num_depths < d_t) + self.epc_min * (self.num_depths > d_t) + self.eps_max * (self.num_depths == d_t)
+  #     eps_min_  = self.eps_max * (self.num_depths < d_t) + self.epc_min * (self.num_depths > d_t) + self.eps_min * (self.num_depths == d_t)
+      
+  #     total_noise = -torch.log1p(-((1 - eps_max_ - eps_min_) * t_.pow(k) + eps_min_))
+
+  #     return total_noise
+
   class TreeLayeredNoiseCat(nn.Module):
 
     def __init__(self, num_categories, cat_depths, num_tree_layers, eps_max=1e-3, eps_min=1e-5, k_init=-6, k_offset=1, **kwargs):
@@ -245,17 +311,44 @@ class TreeLayeredNoiseNum(nn.Module):
       t: [batch_size]
       Returns: [batch_size, num_categories]
       """
-      k = self.k()  # Shape: [num_categories]
+      
+      batch_size = t.shape[0]
+      k   = self.k()                           
+      
+      mask_curr = torch.where(self.num_depths == d_t, 1.0, 0.0)
 
-      numerator = (1 - self.eps_max - self.eps_min) * k * t.pow(k - 1)
-      denominator = 1 - ((1 - self.eps_max - self.eps_min) * t.pow(k) + self.eps_min)
-      rate = numerator / denominator  # Shape: [batch_size, num_categories]
+      alpha = 1 - self.eps_min - self.eps_max
+     
+      num = alpha * k * t_.pow(k-1)
+      den = 1 - (alpha * t_.pow(k) + self.eps_min)
+      g   = num / den
 
-      return rate
+      return g * mask_curr
 
     def total_noise(self, t, noise_fn=None):
-      k = self.k()  # Shape: [num_categories]
-      
-      total_noise = -torch.log1p(-((1 - self.eps_max - self.eps_min) * t.pow(k) + self.eps_min))
 
-      return total_noise
+      batch_size = t.shape[0]
+      k = self.k()  # Shape: [num_categories]
+
+      # d_t: the layer that we diffusing
+      d_t = (t * self.num_tree_layers).int()
+
+      # t_ is the shifted and normalized noise t for the layer d_t
+      t_ = t * self.num_tree_layers - d_t
+
+      mask_curr = (self.num_depths == d_t)
+      mask_prev = (self.num_depths < d_t)
+      msak_next = (self.num_depths > d_t)
+
+      alpha = 1 - self.eps_min - self.eps_max
+
+      # 1) constant at eps_max-1  for past layers
+      noise_prev = -torch.log1p(self.eps_max-1).expand(batch_size, -1)
+      # 2) constant at eps_min  for future layers
+      noise_next = -torch.log1p(-self.eps_min).expand(batch_size, -1)
+      # 3) the log‑linear schedule only for the active layer
+      noise_curr = -torch.log1p(- (alpha * t_.pow(k) + self.eps_min))  # [batch,num_cat]
+
+      # combine them
+      noise = noise_prev * mask_prev + noise_next * mask_next + noise_curr * mask_curr
+      return noise

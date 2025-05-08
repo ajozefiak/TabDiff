@@ -313,8 +313,14 @@ class TreeLayeredNoiseNum(nn.Module):
       """
       
       batch_size = t.shape[0]
-      k   = self.k()                           
-      
+      k   = self.k()      
+
+      # d_t: the layer that we diffusing
+      d_t = (t * self.num_tree_layers).int()
+
+      # t_ is the shifted and normalized noise t for the layer d_t
+      t_ = t * self.num_tree_layers - d_t
+                      
       mask_curr = torch.where(self.num_depths == d_t, 1.0, 0.0)
 
       alpha = 1 - self.eps_min - self.eps_max

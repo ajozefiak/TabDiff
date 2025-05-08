@@ -158,7 +158,6 @@ class LogLinearNoise_PerColumn(nn.Module):
 
 class TreeLayeredNoiseNum(nn.Module):
 
-  # num_depths should be a tensor, TODO: make this transformation here or earlier in the code
   def __init__(self, num_numerical, num_depths, num_tree_layers, sigma_min=0.002, sigma_max=80, rho_init=1, rho_offset=2, **kwargs):
     super().__init__()
     self.sigma_min = sigma_min
@@ -188,12 +187,11 @@ class TreeLayeredNoiseNum(nn.Module):
     sigma_min_pow = self.sigma_min ** (1 / rho)  # Shape: [num_numerical]
     sigma_max_pow = self.sigma_max ** (1 / rho)  # Shape: [num_numerical]
 
-    sigma = (sigma_min_pow + t * (sigma_max_pow - sigma_min_pow)).pow(rho)  # Shape: [batch_size, num_numerical]
-
     # NEW CODE:
+    # d_t: the layer that we diffusing
     d_t = (t * self.num_tree_layers).int()
 
-    # t_ = ((t - d/self.num_tree_layers))*self.num_tree_layers
+    # t_ is the shifted and normalized noise t for the layer d_t
     t_ = t * self.num_tree_layers - d_t
 
     # NOTE: I think that this should be correct
@@ -201,16 +199,12 @@ class TreeLayeredNoiseNum(nn.Module):
     sigma_min_pow_ = sigma_max_pow * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths > d_t) + sigma_min_pow * (self.num_depths == d_t)
     sigma = (sigma_min_pow_ + t_ * (sigma_max_pow_ - sigma_min_pow_)).pow(rho)  # Shape: [batch_size, num_numerical]
 
-    # Need to factor the below code more carefully
-    # sigma_max_pow = sigma_max * (self.num_depths < d_t) + sigma_max_pow * (self.num_depths == d_t) + sigma_min * (self.num_depths > d_t)
-    # sigma_min_pow = sigma_max * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths == d_t) + sigma_min * (self.num_depths > d_t)
-    
     return sigma
 
   def rate_noise(self, t):
     return None
 
-  # NOTE: Don't think we need, or can invert easily
+  # NOTE: Don't think we need, or can even easily invert
   # def inverse_to_t(self, sigma):
   #   """
   #   Inverse function to map sigma back to t, with proper broadcasting support.
@@ -226,3 +220,42 @@ class TreeLayeredNoiseNum(nn.Module):
   #   t = (sigma.pow(1 / rho) - sigma_min_pow) / (sigma_max_pow - sigma_min_pow)
 
   #   return t
+
+  class TreeLayeredNoiseCat(nn.Module):
+
+    def __init__(self, num_categories, cat_depths, num_tree_layers, eps_max=1e-3, eps_min=1e-5, k_init=-6, k_offset=1, **kwargs):
+
+      super().__init__()
+      self.eps_max = eps_max
+      self.eps_min = eps_min
+      # Use softplus to ensure k is positive
+      self.num_categories = num_categories
+      self.k_offset = k_offset
+      self.k_raw = nn.Parameter(torch.tensor([k_init] * self.num_categories, dtype=torch.float32))
+
+      self.cat_depths = cat_depths
+      self.num_tree_layers = num_tree_layers
+
+    def k(self):
+      return torch.nn.functional.softplus(self.k_raw) + self.k_offset
+
+    def rate_noise(self, t, noise_fn=None):
+      """
+      Compute rate noise for all categories with broadcasting.
+      t: [batch_size]
+      Returns: [batch_size, num_categories]
+      """
+      k = self.k()  # Shape: [num_categories]
+
+      numerator = (1 - self.eps_max - self.eps_min) * k * t.pow(k - 1)
+      denominator = 1 - ((1 - self.eps_max - self.eps_min) * t.pow(k) + self.eps_min)
+      rate = numerator / denominator  # Shape: [batch_size, num_categories]
+
+      return rate
+
+    def total_noise(self, t, noise_fn=None):
+      k = self.k()  # Shape: [num_categories]
+      
+      total_noise = -torch.log1p(-((1 - self.eps_max - self.eps_min) * t.pow(k) + self.eps_min))
+
+      return total_noise

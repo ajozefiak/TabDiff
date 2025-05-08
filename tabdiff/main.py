@@ -222,8 +222,8 @@ def main(args):
         raw_config['diffusion_params']['scheduler'] = 'power_mean_per_column'
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'
         # TODO: Fix the names below here
-        raw_config['diffusion_params']['scheduler'] = 'tree_num'
-        raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
+        # raw_config['diffusion_params']['scheduler'] = 'tree_num'
+        # raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
 
     # TODO check that this is working:
     if num_depths is not None:

@@ -325,7 +325,7 @@ class TreeLayeredNoiseCat(nn.Module):
     # t_ is the shifted and normalized noise t for the layer d_t
     t_ = t * self.num_tree_layers - d_t
                     
-    mask_curr = torch.where(self.num_depths == d_t, 1.0, 0.0)
+    mask_curr = torch.where(self.cat_depths == d_t, 1.0, 0.0)
 
     alpha = 1 - self.eps_min - self.eps_max
     
@@ -346,9 +346,9 @@ class TreeLayeredNoiseCat(nn.Module):
     # t_ is the shifted and normalized noise t for the layer d_t
     t_ = t * self.num_tree_layers - d_t
 
-    mask_curr = (self.num_depths == d_t)
-    mask_prev = (self.num_depths < d_t)
-    msak_next = (self.num_depths > d_t)
+    mask_curr = (self.cat_depths == d_t)
+    mask_prev = (self.cat_depths < d_t)
+    msak_next = (self.cat_depths > d_t)
 
     alpha = 1 - self.eps_min - self.eps_max
 

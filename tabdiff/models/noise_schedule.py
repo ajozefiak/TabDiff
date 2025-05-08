@@ -295,8 +295,8 @@ class TreeLayeredNoiseCat(nn.Module):
   def __init__(self, num_categories, cat_depths, num_tree_layers, eps_max=1e-3, eps_min=1e-5, k_init=-6, k_offset=1, **kwargs):
 
     super().__init__()
-    self.eps_max = eps_max
-    self.eps_min = eps_min
+    # self.eps_max = eps_max
+    # self.eps_min = eps_min
     # Use softplus to ensure k is positive
     self.num_categories = num_categories
     self.k_offset = k_offset

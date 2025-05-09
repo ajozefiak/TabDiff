@@ -199,8 +199,8 @@ class TreeLayeredNoiseNum(nn.Module):
     t_ = t * self.num_tree_layers - d_t
 
     # NOTE: I think that this should be correct
-    sigma_max_pow_ = sigma_max_pow * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths > d_t) + sigma_max_pow * (self.num_depths == d_t)
-    sigma_min_pow_ = sigma_max_pow * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths > d_t) + sigma_min_pow * (self.num_depths == d_t)
+    sigma_max_pow_ = sigma_max_pow * (self.num_depths > d_t) + sigma_min_pow * (self.num_depths < d_t) + sigma_max_pow * (self.num_depths == d_t)
+    sigma_min_pow_ = sigma_max_pow * (self.num_depths > d_t) + sigma_min_pow * (self.num_depths < d_t) + sigma_min_pow * (self.num_depths == d_t)
     sigma = (sigma_min_pow_ + t_ * (sigma_max_pow_ - sigma_min_pow_)).pow(rho)  # Shape: [batch_size, num_numerical]
 
     return sigma
@@ -356,11 +356,11 @@ class TreeLayeredNoiseCat(nn.Module):
     alpha = 1 - self.eps_min - self.eps_max
 
     # 1) constant at eps_max-1  for past layers
-    # noise_prev = -torch.log1p((self.eps_max-1).expand(batch_size, -1))
-    noise_prev = -torch.log1p(self.eps_max-1)
+    # noise_next = -torch.log1p((self.eps_max-1).expand(batch_size, -1))
+    noise_next = -torch.log1p(self.eps_max-1)
     # 2) constant at eps_min  for future layers
-    # noise_next = -torch.log1p((-self.eps_min).expand(batch_size, -1))
-    noise_next = -torch.log1p(-self.eps_min)
+    # noise_prev = -torch.log1p((-self.eps_min).expand(batch_size, -1))
+    noise_prev = -torch.log1p(-self.eps_min)
     # 3) the log‑linear schedule only for the active layer
     noise_curr = -torch.log1p(- (alpha * t_.pow(k) + self.eps_min))  # [batch,num_cat]
 

@@ -1,0 +1,5 @@
+For numerical features, it appears to be variance exploding:
+See line 149 in unified_ctime_diffusion
+x_num_t = x_num + noise * sigma_num
+
+but for categorical it completely probabilisitc, so perhaps the noise should be 100%?

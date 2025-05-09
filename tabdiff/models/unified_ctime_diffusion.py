@@ -152,7 +152,10 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         x_cat_t = x_cat
         x_cat_t_soft = x_cat # in the case where x_cat is empty, x_cat_t_soft will have the same shape as x_cat
         if x_cat.shape[1] > 0:
+            # TODO: perhaps fix this
             is_learnable = self.cat_scheduler == 'log_linear_per_column'
+            # NOTE: I am hard coding the line below 
+            is_learnable = True
             strategy = 'soft'if is_learnable else 'hard'
             x_cat_t, x_cat_t_soft = self.q_xt(x_cat, move_chance, strategy=strategy)
 

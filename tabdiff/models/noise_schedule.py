@@ -195,7 +195,7 @@ class TreeLayeredNoiseNum(nn.Module):
     # d_t: the layer that we diffusing
     # d_t = ((1-t) * self.num_tree_layers).int()
     d_t = torch.floor((1 - t) * self.num_tree_layers).long()
-    d_t = d_t.clamp(min=0, max=self.num_tree_layers - 1)
+    # d_t = d_t.clamp(min=0, max=self.num_tree_layers - 1)
 
     # t_ is the shifted and normalized noise t for the layer d_t
     t_ = t * self.num_tree_layers - d_t

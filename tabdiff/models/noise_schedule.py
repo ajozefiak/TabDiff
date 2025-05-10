@@ -209,21 +209,21 @@ class TreeLayeredNoiseNum(nn.Module):
     return None
 
   # NOTE: Don't think we need, or can even easily invert
-  # def inverse_to_t(self, sigma):
-  #   """
-  #   Inverse function to map sigma back to t, with proper broadcasting support.
-  #   sigma: [batch_size, num_numerical] or [batch_size, 1]
-  #   Returns: t: [batch_size, num_numerical]
-  #   """
-  #   rho = self.rho()
+  def inverse_to_t(self, sigma):
+    """
+    Inverse function to map sigma back to t, with proper broadcasting support.
+    sigma: [batch_size, num_numerical] or [batch_size, 1]
+    Returns: t: [batch_size, num_numerical]
+    """
+    rho = self.rho()
 
-  #   sigma_min_pow = self.sigma_min ** (1 / rho)  # Shape: [num_numerical]
-  #   sigma_max_pow = self.sigma_max ** (1 / rho)  # Shape: [num_numerical]
+    sigma_min_pow = self.sigma_min ** (1 / rho)  # Shape: [num_numerical]
+    sigma_max_pow = self.sigma_max ** (1 / rho)  # Shape: [num_numerical]
 
-  #   # To enable broadcasting between sigma and the per-column rho values, expand rho where needed.
-  #   t = (sigma.pow(1 / rho) - sigma_min_pow) / (sigma_max_pow - sigma_min_pow)
+    # To enable broadcasting between sigma and the per-column rho values, expand rho where needed.
+    t = (sigma.pow(1 / rho) - sigma_min_pow) / (sigma_max_pow - sigma_min_pow)
 
-  #   return t
+    return t
 
   # NOTE: This is my naive implementation copying TreeLayerNoiseNum,
   # see below for a proper implementation

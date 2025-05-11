@@ -1,8 +1,10 @@
-# sweep.yaml  (next to main.py)
+# sweep.yaml  (place this next to main.py)
+
+program: main.py
 project: tabdiff_recs_sweep
 entity: adam-jozefiak-massachusetts-institute-of-technology
-name:    recs_sweep
-method:  random
+name: recs_sweep
+method: random
 
 metric:
   name: TotalLoss
@@ -13,32 +15,35 @@ parameters:
     distribution: int_uniform
     min: 2
     max: 4
+
   sigma_data:
     distribution: uniform
     min: 0.5
     max: 3.0
+
   lr:
     distribution: log_uniform_values
     min: 1e-5
     max: 1e-1
+
   rho_init:
     distribution: uniform
     min: 1.0
     max: 12.0
+
   k_init:
     distribution: uniform
     min: 1.0
     max: 12.0
 
+# IMPORTANT: use the array form, and substitute with ${param}
 command:
   - python
   - main.py
-  - --dataname
-  - recs
-  - --mode
-  - train
-  - "--num_layers={num_layers}"
-  - "--sigma_data={sigma_data}"
-  - "--lr={lr}"
-  - "--rho_init={rho_init}"
-  - "--k_init={k_init}"
+  - --dataname=recs
+  - --mode=train
+  - "--num_layers=${num_layers}"
+  - "--sigma_data=${sigma_data}"
+  - "--lr=${lr}"
+  - "--rho_init=${rho_init}"
+  - "--k_init=${k_init}"

@@ -85,6 +85,7 @@ def main(args):
         if args.sigma_data is not None:
             raw_config['diffusion_params']['edm_params']['sigma_data'] = args.sigma_data
         if args.lr is not None:
+            print(f"learning rate: {args.lr}")
             raw_config['train']['main']['lr'] = args.lr
         if args.rho_init is not None:
             raw_config['diffusion_params']['noise_schedule_params']['rho_init'] = args.rho_init

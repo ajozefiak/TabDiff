@@ -354,7 +354,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             model_output, -1, x0[:, :, None]
         ).squeeze(-1)
         alpha = torch.exp(-sigma)
-        if self.cat_scheduler in ['log_linear_unified', 'log_linear_per_column']:
+        if self.cat_scheduler in ['log_linear_unified', 'log_linear_per_column', 'tree_cat']:
             elbo_weight = - dsigma / torch.expm1(sigma)
         else:
             elbo_weight = -1/(1-alpha)

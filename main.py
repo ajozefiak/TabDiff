@@ -35,6 +35,12 @@ if __name__ == '__main__':
     parser.add_argument('--w_num', type=float, default=0.6)
     parser.add_argument('--w_cat', type=float, default=0.6)
 
+    parser.add_argument('--num_layers',  type=int,   default=None)
+    parser.add_argument('--sigma_data',  type=float, default=None)
+    parser.add_argument('--lr',          type=float, default=None)
+    parser.add_argument('--rho_init',    type=float, default=None)
+    parser.add_argument('--k_init',      type=float, default=None)
+
     args = parser.parse_args()
 
     # check cuda

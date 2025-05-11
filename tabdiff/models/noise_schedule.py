@@ -328,10 +328,15 @@ class TreeLayeredNoiseCat(nn.Module):
     k   = self.k()      
 
     # d_t: the layer that we diffusing
-    d_t = (t * self.num_tree_layers).int()
+    # d_t = (t * self.num_tree_layers).int()
+
+    d_t = torch.floor((1 - t) * self.num_tree_layers).long()
+    d_t = d_t.clamp(min=0, max=self.num_tree_layers - 1)
 
     # t_ is the shifted and normalized noise t for the layer d_t
-    t_ = t * self.num_tree_layers - d_t
+    # t_ = t * self.num_tree_layers - d_t
+
+    t_ = self.num_tree_layers * t - self.num_tree_layers + 1 + d_t
                     
     mask_curr = torch.where(self.cat_depths == d_t, 1.0, 0.0)
 
@@ -349,10 +354,15 @@ class TreeLayeredNoiseCat(nn.Module):
     k = self.k()  # Shape: [num_categories]
 
     # d_t: the layer that we diffusing
-    d_t = (t * self.num_tree_layers).int()
+    # d_t = (t * self.num_tree_layers).int()
+
+    d_t = torch.floor((1 - t) * self.num_tree_layers).long()
+    d_t = d_t.clamp(min=0, max=self.num_tree_layers - 1)
 
     # t_ is the shifted and normalized noise t for the layer d_t
-    t_ = t * self.num_tree_layers - d_t
+    # t_ = t * self.num_tree_layers - d_t
+
+    t_ = self.num_tree_layers * t - self.num_tree_layers + 1 + d_t
 
     mask_curr = (self.cat_depths == d_t)
     mask_prev = (self.cat_depths < d_t)

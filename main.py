@@ -6,7 +6,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training of TabDiff')
 
     # General configs
-    parser.add_argument('--dataname', type=str, default='adult', help='Name dataset, one of those in data/ dir')
+    parser.add_argument('--dataname', type=str, default='recs', help='Name dataset, one of those in data/ dir')
     parser.add_argument('--mode', type=str, default='train', help='train or test')
     parser.add_argument('--method', type=str, default='tabdiff', help='Currently we only release our model TabDiff. Baselines will be released soon.')
     parser.add_argument('--gpu', type=int, default=0, help='GPU index')

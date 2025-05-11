@@ -208,20 +208,20 @@ class Trainer:
                     cat_noise_dict = {f"cat_noise/k_col_{i}": value.item() for i, value in enumerate(self.diffusion.cat_schedule.k())}
                 log_dict.update(cat_noise_dict)
 
-            # print schedule parameters
-            num_sched = self.diffusion.num_schedule
-            if hasattr(num_sched, 'rho'):
-                # rho() returns a torch.Tensor of shape [num_numerical]
-                with torch.no_grad():
-                    rhos = num_sched.rho().cpu().numpy()
-                print(f"[Epoch {epoch:3d}] learned ρ (num): {rhos.tolist()}")
+            # # print schedule parameters
+            # num_sched = self.diffusion.num_schedule
+            # if hasattr(num_sched, 'rho'):
+            #     # rho() returns a torch.Tensor of shape [num_numerical]
+            #     with torch.no_grad():
+            #         rhos = num_sched.rho().cpu().numpy()
+            #     print(f"[Epoch {epoch:3d}] learned ρ (num): {rhos.tolist()}")
 
-            cat_sched = self.diffusion.cat_schedule
-            if hasattr(cat_sched, 'k'):
-                # k() returns a torch.Tensor of shape [num_categorical]
-                with torch.no_grad():
-                    ks = cat_sched.k().cpu().numpy()
-                print(f"[Epoch {epoch:3d}] learned  k (cat): {ks.tolist()}")
+            # cat_sched = self.diffusion.cat_schedule
+            # if hasattr(cat_sched, 'k'):
+            #     # k() returns a torch.Tensor of shape [num_categorical]
+            #     with torch.no_grad():
+            #         ks = cat_sched.k().cpu().numpy()
+            #     print(f"[Epoch {epoch:3d}] learned  k (cat): {ks.tolist()}")
 
             
             # Adjust learning rate

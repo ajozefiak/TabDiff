@@ -79,20 +79,18 @@ def main(args):
                 print(f"Found cached config at {config_path}")
         raw_config = cached_raw_config
 
-        # Parse arguments for hyperparam sweep
-        if args.num_layers is not None:
-            raw_config['unimodmlp_params']['num_layers'] = args.num_layers
-        if args.sigma_data is not None:
-            raw_config['diffusion_params']['edm_params']['sigma_data'] = args.sigma_data
-        if args.lr is not None:
-            print(f"learning rate: {args.lr}")
-            raw_config['train']['main']['lr'] = args.lr
-        if args.rho_init is not None:
-            raw_config['diffusion_params']['noise_schedule_params']['rho_init'] = args.rho_init
-        if args.k_init is not None:
-            raw_config['diffusion_params']['noise_schedule_params']['k_init'] = args.k_init
-
-    
+    # Parse arguments for hyperparam sweep
+    if args.num_layers is not None:
+        raw_config['unimodmlp_params']['num_layers'] = args.num_layers
+    if args.sigma_data is not None:
+        raw_config['diffusion_params']['edm_params']['sigma_data'] = args.sigma_data
+    if args.lr is not None:
+        print(f"learning rate: {args.lr}")
+        raw_config['train']['main']['lr'] = args.lr
+    if args.rho_init is not None:
+        raw_config['diffusion_params']['noise_schedule_params']['rho_init'] = args.rho_init
+    if args.k_init is not None:
+        raw_config['diffusion_params']['noise_schedule_params']['k_init'] = args.k_init
     
     ## Creat model_save and result paths
     model_save_path, result_save_path = None, None

@@ -1,4 +1,4 @@
-# sweep.yaml  
+# sweep.yaml  (next to main.py)
 project: tabdiff_recs_sweep
 entity: adam-jozefiak-massachusetts-institute-of-technology
 name:    recs_sweep
@@ -37,13 +37,8 @@ command:
   - recs
   - --mode
   - train
-  - --num_layers
-  - ${num_layers}
-  - --sigma_data
-  - ${sigma_data}
-  - --lr
-  - ${lr}
-  - --rho_init
-  - ${rho_init}
-  - --k_init
-  - ${k_init}
+  - "--num_layers={num_layers}"
+  - "--sigma_data={sigma_data}"
+  - "--lr={lr}"
+  - "--rho_init={rho_init}"
+  - "--k_init={k_init}"

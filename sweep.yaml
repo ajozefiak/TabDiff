@@ -38,8 +38,8 @@ parameters:
 
 # THIS is the magic: use `arguments:` not `args:`
 arguments:
-  --dataname:    recs
-  --mode:        train
+  --dataname:    "recs"
+  --mode:        "train"
   --num_layers:  ${num_layers}
   --sigma_data:  ${sigma_data}
   --lr:          ${lr}

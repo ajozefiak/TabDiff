@@ -1,36 +1,48 @@
 # sweep.yaml
-method: random
+project: tabdiff_recs_sweep   # your W&B project
+name:    recs_sweep            # human‑readable sweep name
+method:  random
+
 metric:
   name: TotalLoss
   goal: minimize
-program: main.py
-command: >-
-  python main.py
-  --dataname recs
-  --mode train
-  --num_layers={num_layers}
-  --sigma_data={sigma_data}
-  --lr={lr}
-  --rho_init={rho_init}
-  --k_init={k_init}
+
 parameters:
   num_layers:
     distribution: int_uniform
     min: 2
     max: 4
+
   sigma_data:
     distribution: uniform
     min: 0.5
     max: 3.0
+
   lr:
-    distribution: log_uniform_values
+    distribution: log_uniform_values   # use _values_ for actual limits
     min: 1e-5
     max: 1e-1
+
   rho_init:
     distribution: uniform
     min: 1.0
     max: 12.0
+
   k_init:
     distribution: uniform
     min: 1.0
     max: 12.0
+
+# This array form is essential!
+command:
+  - python
+  - main.py
+  - --dataname
+  - recs
+  - --mode
+  - train
+  - --num_layers={num_layers}
+  - --sigma_data={sigma_data}
+  - --lr={lr}
+  - --rho_init={rho_init}
+  - --k_init={k_init}

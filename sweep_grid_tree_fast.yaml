@@ -1,9 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_recs_grid_sweep_tree
+project: tabdiff_RECS_tree_sweep_fast
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    recs_grid_sweep_tree
+name:    RECS_tree_sweep_fast
 run_name:  l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
 method:  grid
 
@@ -35,17 +35,35 @@ parameters:
   data:
     values: ["recs"]
 
+  mode:
+    values: ["train"]
+  
+check_val_every:
+  values: [200]
+
+num_timesteps:
+  values: [90]
+
+steps:
+  values: [200]
+
+tree:
+  values: [True]
+
+
+
+
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
   --exp_name:   l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
   --dataname:   ${data}
-  --mode:       train
+  --mode:       ${mode}
   --num_layers: ${num_layers}
   --sigma_data: ${sigma_data}
   --lr:         ${lr}
   --rho_init:   ${rho_init}
   --k_init:     ${k_init}
-  --check_val_every: 200
-  --num_timesteps: 90
-  --steps: 200
-  --tree: True
+  --check_val_every: ${check_val_every}
+  --num_timesteps: ${num_timesteps}
+  --steps: ${steps}
+  --tree: ${tree}

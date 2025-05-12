@@ -50,6 +50,7 @@ def main(args):
 
     ## Set experiment name
     exp_name = args.exp_name
+    print(f"exp_name: {exp_name}")
     if args.exp_name is None:
         exp_name = 'non_learnable_schedule' if args.non_learnable_schedule else 'learnable_schedule'
     exp_name += '_y_only' if args.y_only else ''

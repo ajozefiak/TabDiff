@@ -244,6 +244,8 @@ def main(args):
             print("Performing sequential sampling")
             raw_config['diffusion_params']['scheduler'] = 'tree_num'
             raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
+        else:
+            print("Performing default TabDiff sampling")
 
     # TODO check that this is working:
     if num_depths is not None:

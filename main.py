@@ -44,6 +44,8 @@ if __name__ == '__main__':
     parser.add_argument('--num_timesteps', type=int, default=None)
     parser.add_argument('--steps', type=int, default=None)
     parser.add_argument('--tree', type=str, default="default")
+    parser.add_argument('--net_conditioning', type=str, default="sigma")
+    
     
     args = parser.parse_args()
 

@@ -1,0 +1,72 @@
+# sweep.yaml  (next to main.py)
+
+program: main.py
+project: tabdiff_RECS_default
+entity:  adam-jozefiak-massachusetts-institute-of-technology
+name:    RECS_tree_sweep_default
+method:  grid
+
+metric:
+  name: TotalLoss
+  goal: minimize
+
+parameters:
+  # try num_layers = 2, 3, 4
+  num_layers:
+    values: [2]
+
+  # try sigma_data = 0.5, 1.0, 1.5
+  sigma_data:
+    values: [1.0]
+
+  # e.g. three learning rates
+  lr:
+    values: [1e-3]
+
+  # two values for rho_init
+  rho_init:
+    values: [7.0]
+
+  # two values for k_init
+  k_init:
+    values: [-6.0]
+
+  data:
+    values: ["recs"]
+
+  mode:
+    values: ["train"]
+  
+  check_val_every:
+    values: [1000]
+
+  num_timesteps:
+    values: [450]
+
+  steps:
+    values: [4000]
+
+  tree:
+    values: ["tree", "default"]
+
+  net_conditioning:
+    values: ["t"]
+
+
+
+
+# <<< Make sure you use `args:` so these flags are actually passed >>>
+args:
+  --exp_name:   ${tree}
+  --dataname:   ${data}
+  --mode:       ${mode}
+  --num_layers: ${num_layers}
+  --sigma_data: ${sigma_data}
+  --lr:         ${lr}
+  --rho_init:   ${rho_init}
+  --k_init:     ${k_init}
+  --check_val_every: ${check_val_every}
+  --num_timesteps: ${num_timesteps}
+  --steps: ${steps}
+  --tree: ${tree}
+  --net_conditioning: ${net_conditioning}

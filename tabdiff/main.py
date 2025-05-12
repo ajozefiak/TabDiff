@@ -103,6 +103,10 @@ def main(args):
         raw_config['diffusion_params']['num_timesteps'] = args.num_timesteps
     if args.steps is not None:
         raw_config['train']['main']['steps'] = args.steps
+    if args.net_conditioning is not None:
+        raw_config['diffusion_params']['edm_params']['net_conditioning'] = args.net_conditioning
+
+    print(f"Net Conditioning: {raw_config['diffusion_params']['edm_params']['net_conditioning']}")
     
     ## Creat model_save and result paths
     model_save_path, result_save_path = None, None

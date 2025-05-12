@@ -4,7 +4,7 @@ program: main.py
 project: tabdiff_recs_grid_sweep_tree
 entity:  adam-jozefiak-massachusetts-institute-of-technology
 name:    recs_grid_sweep_tree
-run_name:  "l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}"  
+run_name:  l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
 method:  grid
 
 metric:
@@ -37,6 +37,7 @@ parameters:
 
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
+  --exp_name:   l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
   --dataname:   ${data}
   --mode:       train
   --num_layers: ${num_layers}

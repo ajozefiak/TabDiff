@@ -38,17 +38,17 @@ parameters:
   mode:
     values: ["train"]
   
-check_val_every:
-  values: [200]
+  check_val_every:
+    values: [200]
 
-num_timesteps:
-  values: [90]
+  num_timesteps:
+    values: [90]
 
-steps:
-  values: [200]
+  steps:
+    values: [200]
 
-tree:
-  values: [True]
+  tree:
+    values: [True]
 
 
 

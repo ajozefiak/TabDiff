@@ -66,4 +66,3 @@ args:
   --check_val_every: ${check_val_every}
   --num_timesteps: ${num_timesteps}
   --steps: ${steps}
-  --tree: ${tree}

@@ -43,11 +43,7 @@ if __name__ == '__main__':
     parser.add_argument('--check_val_every', type=int, default=None)
     parser.add_argument('--num_timesteps', type=int, default=None)
     parser.add_argument('--steps', type=int, default=None)
-    parser.add_argument(
-    '--tree',
-    action='store_true',
-    help='Enable the tree‐structured noise schedule.'
-)
+    parser.add_argument('--tree', type=str, default="default")
     
     args = parser.parse_args()
 

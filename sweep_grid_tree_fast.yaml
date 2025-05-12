@@ -48,7 +48,7 @@ parameters:
     values: [200]
 
   tree:
-    values: [True]
+    values: ["tree"]
 
 
 

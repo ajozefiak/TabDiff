@@ -241,7 +241,7 @@ def main(args):
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'
         # TODO: Fix the names below here
         print(args.tree)
-        if args.tree:
+        if args.tree == "tree":
             print("Performing sequential sampling")
             raw_config['diffusion_params']['scheduler'] = 'tree_num'
             raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'

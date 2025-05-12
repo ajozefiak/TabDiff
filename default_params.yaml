@@ -1,10 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_RECS_tree_sweep_fast_fixed
+project: tabdiff_RECS_default
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    RECS_tree_sweep_fast_fixed
-run_name:  l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
+name:    RECS_tree_sweep_default
 method:  grid
 
 metric:

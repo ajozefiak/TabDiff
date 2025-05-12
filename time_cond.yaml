@@ -1,9 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_RECS_default
+project: time_cond
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    RECS_tree_sweep_default
+name:    time_cond
 method:  grid
 
 metric:

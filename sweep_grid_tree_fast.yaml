@@ -1,0 +1,50 @@
+# sweep.yaml  (next to main.py)
+
+program: main.py
+project: tabdiff_recs_grid_sweep_tree
+entity:  adam-jozefiak-massachusetts-institute-of-technology
+name:    recs_grid_sweep_tree
+run_name:  "l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}"  
+method:  grid
+
+metric:
+  name: TotalLoss
+  goal: minimize
+
+parameters:
+  # try num_layers = 2, 3, 4
+  num_layers:
+    values: [2, 3, 4]
+
+  # try sigma_data = 0.5, 1.0, 1.5
+  sigma_data:
+    values: [0.5, 1.0, 1.5]
+
+  # e.g. three learning rates
+  lr:
+    values: [1e-4, 1e-3, 1e-2]
+
+  # two values for rho_init
+  rho_init:
+    values: [4.0, 7.0, 10.0]
+
+  # two values for k_init
+  k_init:
+    values: [-9.0, -6.0, -3.0]
+
+  data:
+    values: ["recs"]
+
+# <<< Make sure you use `args:` so these flags are actually passed >>>
+args:
+  --dataname:   ${data}
+  --mode:       train
+  --num_layers: ${num_layers}
+  --sigma_data: ${sigma_data}
+  --lr:         ${lr}
+  --rho_init:   ${rho_init}
+  --k_init:     ${k_init}
+  --check_val_every: 200
+  --num_timesteps: 90
+  --steps: 200
+  --tree: True

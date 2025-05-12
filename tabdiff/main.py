@@ -91,6 +91,12 @@ def main(args):
         raw_config['diffusion_params']['noise_schedule_params']['rho_init'] = args.rho_init
     if args.k_init is not None:
         raw_config['diffusion_params']['noise_schedule_params']['k_init'] = args.k_init
+    if args.check_val_every is not None:
+        raw_config['train']['main']['check_val_every'] = args.check_val_every
+    if args.num_timesteps is not None:
+        raw_config['diffusion_params']['num_timesteps'] = args.num_timesteps
+    if args.steps is not None:
+        raw_config['train']['main']['steps'] = args.steps
     
     ## Creat model_save and result paths
     model_save_path, result_save_path = None, None
@@ -234,8 +240,10 @@ def main(args):
         raw_config['diffusion_params']['scheduler'] = 'power_mean_per_column'
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'
         # TODO: Fix the names below here
-        raw_config['diffusion_params']['scheduler'] = 'tree_num'
-        raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
+        if args.tree:
+            print("Performing sequential sampling")
+            raw_config['diffusion_params']['scheduler'] = 'tree_num'
+            raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
 
     # TODO check that this is working:
     if num_depths is not None:

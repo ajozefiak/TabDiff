@@ -40,6 +40,11 @@ if __name__ == '__main__':
     parser.add_argument('--lr',          type=float, default=None)
     parser.add_argument('--rho_init',    type=float, default=None)
     parser.add_argument('--k_init',      type=float, default=None)
+    parser.add_argument('--check_val_every', type=int, default=None)
+    parser.add_argument('--num_timesteps', type=int, default=None)
+    parser.add_argument('--steps', type=int, default=None)
+    parser.add_argument('--tree', type=bool, default=False)
+    
 
     args = parser.parse_args()
 

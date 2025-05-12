@@ -53,6 +53,7 @@ def main(args):
     if args.exp_name is None:
         exp_name = 'non_learnable_schedule' if args.non_learnable_schedule else 'learnable_schedule'
     exp_name += '_y_only' if args.y_only else ''
+    print(f"exp_name: {exp_name}")
     
     ## Load configs
     curr_dir = os.path.dirname(os.path.abspath(__file__))

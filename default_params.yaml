@@ -55,7 +55,6 @@ parameters:
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
   --exp_name:   ${tree}
-  --exp_name:   ${tree}
   --dataname:   ${data}
   --mode:       ${mode}
   --num_layers: ${num_layers}

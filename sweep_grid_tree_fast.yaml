@@ -55,7 +55,7 @@ parameters:
 
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
-  --exp_name:   l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
+  --exp_name:   "l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}""
   --dataname:   ${data}
   --mode:       ${mode}
   --num_layers: ${num_layers}

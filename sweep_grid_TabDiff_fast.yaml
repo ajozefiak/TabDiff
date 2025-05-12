@@ -1,9 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_RECS_TabDiff_sweep_fast
+project: tabdiff_RECS_TabDiff_sweep_fast_fixed
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    RECS_TabDiff_sweep_fast
+name:    RECS_TabDiff_sweep_fast_fixed
 run_name:  l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
 method:  grid
 

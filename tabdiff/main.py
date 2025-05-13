@@ -218,6 +218,21 @@ def main(args):
                 )
                 raw_config['diffusion_params']['noise_schedule_params']['k'] = noise_schedule.k()[0].item()    # the target col is placed at the first position
             
+
+    # TODO check that this is working:
+    if num_depths is not None:
+        raw_config["diffusion_params"]["num_depths"] = num_depths
+        raw_config['unimodmlp_params']["num_depths"] = num_depths
+        # raw_config['diffusion_params']['noise_schedule_params']['num_depths'] = num_depths
+    if cat_depths is not None:
+        raw_config["diffusion_params"]["cat_depths"] = cat_depths
+        raw_config['unimodmlp_params']["cat_depths"] = cat_depths
+        # raw_config['diffusion_params']['noise_schedule_params']['cat_depths'] = cat_depths
+    if num_tree_layers is not None:
+        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
+        raw_config['unimodmlp_params']["num_tree_layers"] = num_tree_layers
+        # raw_config['diffusion_params']['noise_schedule_params']['num_tree_layers'] = num_tree_layers
+        
     backbone = UniModMLP(
         **raw_config['unimodmlp_params']
     )
@@ -258,19 +273,7 @@ def main(args):
         else:
             print("Performing default TabDiff sampling")
 
-    # TODO check that this is working:
-    if num_depths is not None:
-        raw_config["diffusion_params"]["num_depths"] = num_depths
-        raw_config['unimodmlp_params']["num_depths"] = num_depths
-        # raw_config['diffusion_params']['noise_schedule_params']['num_depths'] = num_depths
-    if cat_depths is not None:
-        raw_config["diffusion_params"]["cat_depths"] = cat_depths
-        raw_config['unimodmlp_params']["cat_depths"] = cat_depths
-        # raw_config['diffusion_params']['noise_schedule_params']['cat_depths'] = cat_depths
-    if num_tree_layers is not None:
-        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
-        raw_config['unimodmlp_params']["num_tree_layers"] = num_tree_layers
-        # raw_config['diffusion_params']['noise_schedule_params']['num_tree_layers'] = num_tree_layers
+    
 
 
     diffusion = UnifiedCtimeDiffusion(

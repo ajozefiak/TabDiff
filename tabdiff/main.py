@@ -81,6 +81,7 @@ def main(args):
             assert ckpt_path_arr, f"Cannot not infer ckpt_path from {ckpt_parent_path}, please make sure that you first train a model before testing!"
             ckpt_path = ckpt_path_arr[0]
         config_path = os.path.join(os.path.dirname(ckpt_path), 'config.pkl')
+        print(f"ckpt_path: {ckpt_path}")
         print(f"config_path: {config_path}")
         if os.path.exists(config_path):
             with open(config_path, 'rb') as f:

@@ -38,7 +38,7 @@ parameters:
     values: ["train"]
   
   check_val_every:
-    values: [100]
+    values: [1]
 
   num_timesteps:
     values: [170]

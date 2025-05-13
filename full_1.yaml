@@ -52,6 +52,9 @@ parameters:
   exp_name:
     values: ["FULL_170_"]
 
+  num_samples_to_generate:
+    values: [2048]
+
 
 
 
@@ -69,3 +72,4 @@ args:
   --num_timesteps: ${num_timesteps}
   --steps: ${steps}
   --tree: ${tree}
+  --num_samples_to_generate: ${num_samples_to_generate}

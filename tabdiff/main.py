@@ -63,6 +63,8 @@ def main(args):
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = f'{curr_dir}/configs/tabdiff_configs.toml'
     raw_config = src.load_config(config_path)
+
+    print(f"raw_config: {raw_config}")
     
     print(f"{args.mode.capitalize()} Mode is Enabled")
     num_samples_to_generate = None

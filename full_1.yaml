@@ -38,19 +38,19 @@ parameters:
     values: ["train"]
   
   check_val_every:
-    values: [1000]
+    values: [100]
 
   num_timesteps:
-    values: [450]
+    values: [170]
 
   steps:
-    values: [4000]
+    values: [100]
 
   tree:
     values: ["tree", "default"]
 
   exp_name:
-    values: ["FULL_"]
+    values: ["FULL_170_"]
 
 
 

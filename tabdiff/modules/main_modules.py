@@ -71,11 +71,8 @@ class UniModMLP(nn.Module):
             x_cat_pred: [bs, sum(categories)], the predicted UNORMALIZED logits for categorical data
     """
     def __init__(
-            self, d_numerical, categories, num_layers, d_token,
+            self, d_numerical, categories, num_layers, d_token, num_depths, cat_depths, num_tree_layers,
             n_head = 1, factor = 4, bias = True, dim_t=512, use_mlp=True,
-            num_depths = None,
-            cat_depths = None,
-            num_tree_layers = None,
             **kwargs):
         super().__init__()
         self.d_numerical = d_numerical

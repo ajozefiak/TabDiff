@@ -38,13 +38,13 @@ parameters:
     values: ["train"]
   
   check_val_every:
-    values: [1]
+    values: [100]
 
   num_timesteps:
     values: [170]
 
   steps:
-    values: [100]
+    values: [1]
 
   tree:
     values: ["tree", "default"]

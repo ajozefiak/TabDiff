@@ -11,6 +11,10 @@ metric:
   goal: minimize
 
 parameters:
+  
+  exp_name:
+    values: ["PE2"]
+  
   # try num_layers = 2, 3, 4
   num_layers:
     values: [2]
@@ -54,7 +58,7 @@ parameters:
 
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
-  --exp_name:   ${tree}
+  --exp_name:   ${exp_name}
   --dataname:   ${data}
   --mode:       ${mode}
   --num_layers: ${num_layers}

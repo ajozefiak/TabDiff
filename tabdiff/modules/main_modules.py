@@ -87,9 +87,9 @@ class UniModMLP(nn.Module):
         self.register_buffer('depths', torch.tensor(all_depths, dtype=torch.float32))
 
         # a PositionalEmbedding that maps each scalar depth -> d_token–dim vector
-        self.feature_pos_emb = PositionalEmbedding(num_channels=d_token,
-                                                   max_positions=int(num_tree_layers))
-
+        # self.feature_pos_emb = PositionalEmbedding(num_channels=d_token,
+        #                                            max_positions=int(num_tree_layers))
+        self.feature_pos_emb = PositionalEmbedding(num_channels=d_token)
 
         self.tokenizer = Tokenizer(d_numerical, categories, d_token, bias = bias)
         self.encoder = Transformer(num_layers, d_token, n_head, d_token, factor)

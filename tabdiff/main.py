@@ -55,7 +55,7 @@ def main(args):
         exp_name = 'non_learnable_schedule' if args.non_learnable_schedule else 'learnable_schedule'
     print(f"exp_name: {exp_name}")
     if args.tree is not None:
-        exp_name = args.tree
+        exp_name = exp_name + args.tree
     exp_name += '_y_only' if args.y_only else ''
     print(f"exp_name: {exp_name}")
 
@@ -232,7 +232,7 @@ def main(args):
         raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
         raw_config['unimodmlp_params']["num_tree_layers"] = num_tree_layers
         # raw_config['diffusion_params']['noise_schedule_params']['num_tree_layers'] = num_tree_layers
-        
+
     backbone = UniModMLP(
         **raw_config['unimodmlp_params']
     )

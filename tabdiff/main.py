@@ -69,6 +69,7 @@ def main(args):
     
     print(f"{args.mode.capitalize()} Mode is Enabled")
     num_samples_to_generate = None
+    num_samples_to_generate = args.num_samples_to_generate
     ckpt_path = None
     if args.mode == 'train':
         print("NEW training is started")

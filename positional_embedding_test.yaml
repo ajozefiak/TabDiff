@@ -1,9 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_RECS_default
+project: tabdiff_RECS_tree_PE
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    RECS_tree_sweep_default
+name:    tabdiff_RECS_tree_PE
 method:  grid
 
 metric:

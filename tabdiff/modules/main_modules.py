@@ -72,11 +72,27 @@ class UniModMLP(nn.Module):
     """
     def __init__(
             self, d_numerical, categories, num_layers, d_token,
-            n_head = 1, factor = 4, bias = True, dim_t=512, use_mlp=True, **kwargs
-        ):
+            n_head = 1, factor = 4, bias = True, dim_t=512, use_mlp=True,
+            num_depths = None,
+            cat_depths = None,
+            num_tree_layers = None,
+            **kwargs):
         super().__init__()
         self.d_numerical = d_numerical
         self.categories = categories
+
+        # === build a single [n_vars] depth list ===
+        if num_depths is None or cat_depths is None:
+            raise ValueError("Must pass num_depths and cat_depths into UniModMLP")
+        # order must match Tokenizer: numerical vars first, then each categorical var
+        all_depths = num_depths + cat_depths
+        # register as buffer so it lives on the right device & dtype
+        self.register_buffer('depths', torch.tensor(all_depths, dtype=torch.float32))
+
+        # a PositionalEmbedding that maps each scalar depth -> d_token–dim vector
+        self.feature_pos_emb = PositionalEmbedding(num_channels=d_token,
+                                                   max_positions=int(num_tree_layers))
+
 
         self.tokenizer = Tokenizer(d_numerical, categories, d_token, bias = bias)
         self.encoder = Transformer(num_layers, d_token, n_head, d_token, factor)
@@ -91,6 +107,13 @@ class UniModMLP(nn.Module):
         e = self.tokenizer(x_num, x_cat)
         decoder_input = e[:, 1:, :]        # ignore the first CLS token. 
         y = self.encoder(decoder_input)
+
+        # === add depth positional embedding ===
+        # depths: [n_vars], feature_pos_emb → [n_vars, d_token]
+        depth_emb = self.feature_pos_emb(self.depths)      # [n_vars, d_token]
+        depth_emb = depth_emb.unsqueeze(0).expand_as(y)    # [bs, n_vars, d_token]
+        y = y + depth_emb
+
         pred_y = self.mlp(y.reshape(y.shape[0], -1), timesteps)
         pred_e = self.decoder(pred_y.reshape(*y.shape))
         x_num_pred, x_cat_pred = self.detokenizer(pred_e)

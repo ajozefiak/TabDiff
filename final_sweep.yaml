@@ -14,11 +14,11 @@ metric:
 parameters:
   # try num_layers = 2, 3, 4
   num_layers:
-    values: [2]
+    values: [2, 3, 4]
 
   # try sigma_data = 0.5, 1.0, 1.5
   sigma_data:
-    values: [1.75, 2.0, 2.25, 2.5]
+    values: [1.75, 2.0, 2.25]
 
   # e.g. three learning rates
   lr:

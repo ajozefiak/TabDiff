@@ -1,3 +1,12 @@
+# 6.S982 Final Project Report for Tabular Diffusion
+
+- Our report is the file: 6.S982_final_report_tabular_diffusion.pdf.
+- The RECS dataset experiments were conducted with a (refactored) TabDiff package, hence we are submitting our fork with our final report pull request.
+- Our synthetic experiments are in: Sequential_tree_diffusion_synthetic.ipynb
+- An example notebook using the TabDiff package with our subset of RECS is 051225_RECS_final_sweep.ipynb.
+- The RECS dataset is publically available online.
+
+
 # TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation
 
 <p align="center">

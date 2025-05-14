@@ -50,12 +50,15 @@ parameters:
   tree:
     values: ["tree", "default"]
 
+  exp_name:
+    values: ["sigma_sweep_"]
+
 
 
 
 # <<< Make sure you use `args:` so these flags are actually passed >>>
 args:
-  --exp_name:   "l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}"
+  --exp_name:   ${exp_name}
   --dataname:   ${data}
   --mode:       ${mode}
   --num_layers: ${num_layers}

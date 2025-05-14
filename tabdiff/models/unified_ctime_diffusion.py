@@ -31,10 +31,22 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             noise_schedule_params={},
             sampler_params={},
             device=torch.device('cpu'),
+            num_depths       = None,
+            cat_depths       = None,
+            num_tree_layers        = None,
             **kwargs
         ):
 
         super(UnifiedCtimeDiffusion, self).__init__()
+
+        # TODO: check that this is workign correct:
+        num_depths = torch.tensor(num_depths)
+        cat_depths = torch.tensor(cat_depths)
+
+        self.num_depths     = num_depths
+        self.cat_depths     = cat_depths
+        self.num_tree_layers = num_tree_layers
+        print(f"num_depths: {num_depths}")
 
         self.num_numerical_features = num_numerical_features
         self.num_classes = num_classes # it as a vector [K1, K2, ..., Km]
@@ -82,6 +94,11 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.num_schedule = PowerMeanNoise(**noise_schedule_params)
         elif self.scheduler == 'power_mean_per_column':
             self.num_schedule = PowerMeanNoise_PerColumn(num_numerical = num_numerical_features, **noise_schedule_params)
+        # Our tree_layered noise scheduler
+        # TODO
+        elif self.scheduler == 'tree_num':
+            self.num_schedule = TreeLayeredNoiseNum(num_numerical = num_numerical_features, num_depths = num_depths, num_tree_layers = num_tree_layers, **noise_schedule_params)
+            # self.cat_schedule = TreeLayeredNoiseCat(num_categories = len(num_classes), cat_depths = cat_depths, num_tree_layers = num_tree_layers, **noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.scheduler}-- is not implemented for contiuous data at CTIME ")
         
@@ -89,8 +106,13 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             self.cat_schedule = LogLinearNoise(**noise_schedule_params)
         elif self.cat_scheduler == 'log_linear_per_column':
             self.cat_schedule = LogLinearNoise_PerColumn(num_categories = len(num_classes), **noise_schedule_params)
+        # TODO
+        elif self.cat_scheduler == 'tree_cat':
+            self.cat_schedule = TreeLayeredNoiseCat(num_categories = len(num_classes), cat_depths = cat_depths, num_tree_layers = num_tree_layers, **noise_schedule_params)
         else:
             raise NotImplementedError(f"The noise schedule--{self.cat_scheduler}-- is not implemented for discrete data at CTIME ")
+
+        
 
     def mixed_loss(self, x):
         b = x.shape[0]
@@ -130,7 +152,10 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
         x_cat_t = x_cat
         x_cat_t_soft = x_cat # in the case where x_cat is empty, x_cat_t_soft will have the same shape as x_cat
         if x_cat.shape[1] > 0:
+            # TODO: perhaps fix this
             is_learnable = self.cat_scheduler == 'log_linear_per_column'
+            # NOTE: I am hard coding the line below 
+            is_learnable = True
             strategy = 'soft'if is_learnable else 'hard'
             x_cat_t, x_cat_t_soft = self.q_xt(x_cat, move_chance, strategy=strategy)
 
@@ -329,7 +354,7 @@ class UnifiedCtimeDiffusion(torch.nn.Module):
             model_output, -1, x0[:, :, None]
         ).squeeze(-1)
         alpha = torch.exp(-sigma)
-        if self.cat_scheduler in ['log_linear_unified', 'log_linear_per_column']:
+        if self.cat_scheduler in ['log_linear_unified', 'log_linear_per_column', 'tree_cat']:
             elbo_weight = - dsigma / torch.expm1(sigma)
         else:
             elbo_weight = -1/(1-alpha)

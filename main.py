@@ -6,7 +6,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training of TabDiff')
 
     # General configs
-    parser.add_argument('--dataname', type=str, default='adult', help='Name dataset, one of those in data/ dir')
+    parser.add_argument('--dataname', type=str, default='recs', help='Name dataset, one of those in data/ dir')
     parser.add_argument('--mode', type=str, default='train', help='train or test')
     parser.add_argument('--method', type=str, default='tabdiff', help='Currently we only release our model TabDiff. Baselines will be released soon.')
     parser.add_argument('--gpu', type=int, default=0, help='GPU index')
@@ -35,6 +35,18 @@ if __name__ == '__main__':
     parser.add_argument('--w_num', type=float, default=0.6)
     parser.add_argument('--w_cat', type=float, default=0.6)
 
+    parser.add_argument('--num_layers',  type=int,   default=None)
+    parser.add_argument('--sigma_data',  type=float, default=None)
+    parser.add_argument('--lr',          type=float, default=None)
+    parser.add_argument('--rho_init',    type=float, default=None)
+    parser.add_argument('--k_init',      type=float, default=None)
+    parser.add_argument('--check_val_every', type=int, default=None)
+    parser.add_argument('--num_timesteps', type=int, default=None)
+    parser.add_argument('--steps', type=int, default=None)
+    parser.add_argument('--tree', type=str, default="default")
+    parser.add_argument('--net_conditioning', type=str, default="sigma")
+    
+    
     args = parser.parse_args()
 
     # check cuda

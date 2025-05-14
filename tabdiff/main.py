@@ -40,22 +40,37 @@ def main(args):
     with open(info_path, 'r') as f:
         info = json.load(f)
     
+    # TODO: Double check if this is working correctly
+    num_depths = info.get("num_depths", None)
+    cat_depths = info.get("cat_depths", None)
+    num_tree_layers = info.get("num_tree_layers", None)
+
     ## Set up flags
     is_dcr = 'dcr' in dataname
 
     ## Set experiment name
     exp_name = args.exp_name
+    print(f"exp_name: {exp_name}")
     if args.exp_name is None:
         exp_name = 'non_learnable_schedule' if args.non_learnable_schedule else 'learnable_schedule'
+    print(f"exp_name: {exp_name}")
+    if args.tree is not None:
+        exp_name = exp_name + args.tree
     exp_name += '_y_only' if args.y_only else ''
+    print(f"exp_name: {exp_name}")
     
     ## Load configs
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = f'{curr_dir}/configs/tabdiff_configs.toml'
     raw_config = src.load_config(config_path)
+
+    print(f"raw_config: {raw_config}")
+    print(f"config_path: {config_path}")
     
     print(f"{args.mode.capitalize()} Mode is Enabled")
     num_samples_to_generate = None
+    num_samples_to_generate = args.num_samples_to_generate
+    print(f"num_samples_to_generate: {num_samples_to_generate}")
     ckpt_path = None
     if args.mode == 'train':
         print("NEW training is started")
@@ -68,12 +83,36 @@ def main(args):
             assert ckpt_path_arr, f"Cannot not infer ckpt_path from {ckpt_parent_path}, please make sure that you first train a model before testing!"
             ckpt_path = ckpt_path_arr[0]
         config_path = os.path.join(os.path.dirname(ckpt_path), 'config.pkl')
+        print(f"ckpt_path: {ckpt_path}")
+        print(f"config_path: {config_path}")
         if os.path.exists(config_path):
             with open(config_path, 'rb') as f:
                 cached_raw_config = pickle.load(f)
                 print(f"Found cached config at {config_path}")
         raw_config = cached_raw_config
-    
+
+    # Parse arguments for hyperparam sweep
+    if args.num_layers is not None:
+        raw_config['unimodmlp_params']['num_layers'] = args.num_layers
+    if args.sigma_data is not None:
+        raw_config['diffusion_params']['edm_params']['sigma_data'] = args.sigma_data
+    if args.lr is not None:
+        print(f"learning rate: {args.lr}")
+        raw_config['train']['main']['lr'] = args.lr
+    if args.rho_init is not None:
+        raw_config['diffusion_params']['noise_schedule_params']['rho_init'] = args.rho_init
+    if args.k_init is not None:
+        raw_config['diffusion_params']['noise_schedule_params']['k_init'] = args.k_init
+    if args.check_val_every is not None:
+        raw_config['train']['main']['check_val_every'] = args.check_val_every
+    if args.num_timesteps is not None:
+        raw_config['diffusion_params']['num_timesteps'] = args.num_timesteps
+    if args.steps is not None:
+        raw_config['train']['main']['steps'] = args.steps
+    if args.net_conditioning is not None:
+        raw_config['diffusion_params']['edm_params']['net_conditioning'] = args.net_conditioning
+
+    print(f"Net Conditioning: {raw_config['diffusion_params']['edm_params']['net_conditioning']}")
     
     ## Creat model_save and result paths
     model_save_path, result_save_path = None, None
@@ -131,7 +170,10 @@ def main(args):
         num_workers = 4,
     )
     d_numerical, categories = train_data.d_numerical, train_data.categories
-    
+    print(f"Number of numerical {d_numerical}")
+    print(f"Number of categorical {categories}")
+
+
     val_data = TabDiffDataset(dataname, data_dir, info, y_only=args.y_only, isTrain=False, dequant_dist=raw_config['data']['dequant_dist'], int_dequant_factor=raw_config['data']['int_dequant_factor'])
 
     ## Load Metrics
@@ -209,9 +251,31 @@ def main(args):
         state_dicts = torch.load(y_only_model_path, map_location=device)
         y_only_model.load_state_dict(state_dicts['denoise_fn'])
 
+    # TODO: Perhaps we modify this for our new scheduler... codebase is not the most organized...
     if not args.y_only and not args.non_learnable_schedule:
         raw_config['diffusion_params']['scheduler'] = 'power_mean_per_column'
         raw_config['diffusion_params']['cat_scheduler'] = 'log_linear_per_column'
+        # TODO: Fix the names below here
+        print(args.tree)
+        if args.tree == "tree":
+            print("Performing sequential sampling")
+            raw_config['diffusion_params']['scheduler'] = 'tree_num'
+            raw_config['diffusion_params']['cat_scheduler'] = 'tree_cat'
+        else:
+            print("Performing default TabDiff sampling")
+
+    # TODO check that this is working:
+    if num_depths is not None:
+        raw_config["diffusion_params"]["num_depths"] = num_depths
+        # raw_config['diffusion_params']['noise_schedule_params']['num_depths'] = num_depths
+    if cat_depths is not None:
+        raw_config["diffusion_params"]["cat_depths"] = cat_depths
+        # raw_config['diffusion_params']['noise_schedule_params']['cat_depths'] = cat_depths
+    if num_tree_layers is not None:
+        raw_config["diffusion_params"]["num_tree_layers"] = num_tree_layers
+        # raw_config['diffusion_params']['noise_schedule_params']['num_tree_layers'] = num_tree_layers
+
+
     diffusion = UnifiedCtimeDiffusion(
         num_classes=categories,
         num_numerical_features=d_numerical,

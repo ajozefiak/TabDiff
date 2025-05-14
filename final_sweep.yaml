@@ -1,9 +1,9 @@
 # sweep.yaml  (next to main.py)
 
 program: main.py
-project: tabdiff_RECS_tree_sweep_fast_fixed_2
+project: final_sweep
 entity:  adam-jozefiak-massachusetts-institute-of-technology
-name:    RECS_tree_sweep_fast_fixed_2
+name:    final_sweep
 run_name:  l${num_layers}_σ${sigma_data}_lr${lr}_rho${rho_init}_k${k_init}
 method:  grid
 
@@ -14,11 +14,11 @@ metric:
 parameters:
   # try num_layers = 2, 3, 4
   num_layers:
-    values: [2, 3, 4]
+    values: [2]
 
   # try sigma_data = 0.5, 1.0, 1.5
   sigma_data:
-    values: [1.75, 2.0, 2.25]
+    values: [1.5]
 
   # e.g. three learning rates
   lr:
@@ -51,7 +51,7 @@ parameters:
     values: ["tree", "default"]
 
   exp_name:
-    values: ["sigma_sweep_"]
+    values: ["final_sweep_"]
 
 
 

@@ -415,7 +415,7 @@ def process_data(name):
             
         train_df = data_df
         
-        if "dcr" in name:   # create 50/50 splits for dcr datasets
+        if "dcr" in name and "diabetes" not in name:   # create 50/50 splits for dcr datasets; no need for this for diabetes dataset as it's done in preprocessing
             complete_df = pd.concat([train_df, test_df, val_df], axis = 0, ignore_index=True)
             num_data = complete_df.shape[0]
             num_train = int(num_data*0.5)

@@ -516,7 +516,7 @@ def process_data(name):
         import pdb; pdb.set_trace()
 
 
-    # Suggested change for robustness:
+    # Suggested change for robustness (but I suspect that it should be earlier):
     # X_cat_train = train_df[cat_columns].to_numpy().astype('str')
     # X_cat_test = test_df[cat_columns].to_numpy().astype('str') 
     # X_cat_val = val_df[cat_columns].to_numpy().astype('str')    

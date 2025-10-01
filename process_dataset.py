@@ -516,7 +516,10 @@ def process_data(name):
         import pdb; pdb.set_trace()
 
 
-    
+    # Suggested change for robustness:
+    # X_cat_train = train_df[cat_columns].to_numpy().astype('str')
+    # X_cat_test = test_df[cat_columns].to_numpy().astype('str') 
+    # X_cat_val = val_df[cat_columns].to_numpy().astype('str')    
     X_num_train = train_df[num_columns].to_numpy().astype(np.float32)
     X_cat_train = train_df[cat_columns].to_numpy()
     y_train = train_df[target_columns].to_numpy()
